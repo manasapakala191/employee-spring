@@ -1,46 +1,49 @@
 package com.increff.employee.dao;
 
 import com.increff.employee.pojo.EmployeePojo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 @Repository
 public class EmployeeDao {
-    private HashMap<Integer, EmployeePojo> rows;
-    private int lastId;
+    private static String delete_id = "delete from EmployeePojo p where id=:id";
+    private static String select_id = "select p from EmployeePojo p where id=:id";
+    private static String select_all = "select p from EmployeePojo p";
 
-    @PostConstruct
-    public void init() {
-        rows = new HashMap<Integer, EmployeePojo>();
-    }
+
+    @PersistenceContext
+    EntityManager em;
 
     public void insert(EmployeePojo p) {
-        lastId++;
-        p.setId(lastId);
-        rows.put(lastId, p);
+        em.persist(p);
     }
 
-    public void delete(int id) {
-        rows.remove(id);
+    public int delete(int id) {
+        Query query = em.createQuery(delete_id);
+        query.setParameter("id",id);
+        int result = query.executeUpdate();
+        return result;
     }
 
     public EmployeePojo select(int id) {
-        return rows.get(id);
+        TypedQuery<EmployeePojo> query = em.createQuery(select_id,EmployeePojo.class);
+        query.setParameter("id",id);
+        return query.getSingleResult();
     }
 
     public List<EmployeePojo> selectAll() {
-        ArrayList<EmployeePojo> list = new ArrayList<EmployeePojo>();
-        list.addAll(rows.values());
-        return list;
+        TypedQuery<EmployeePojo> query = em.createQuery(select_all,EmployeePojo.class);
+        return query.getResultList();
     }
 
     public void update(int id, EmployeePojo p) {
-        rows.put(id, p);
+        p.setId(id);
     }
-
 
 }

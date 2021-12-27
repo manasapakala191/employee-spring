@@ -1,6 +1,6 @@
 package com.increff.employee.service;
 
-import com.increff.employee.dao.EmployeeDao;
+import com.increff.employee.dao.EmployeeInMemDao;
 import com.increff.employee.pojo.EmployeePojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import java.util.List;
 public class EmployeeService1 {
 
     @Autowired
-    EmployeeDao employeeDao;
+    EmployeeInMemDao employeeDao;
 
     public void init(){
 

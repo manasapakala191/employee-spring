@@ -1,12 +1,16 @@
 package com.increff.employee.controller;
 
 import com.increff.employee.model.InfoData;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class UIController {
+
+    @Value("${app.baseUrl}")
+    private String baseUrl;
 
     @RequestMapping(value = "")
     public ModelAndView index(){
@@ -28,9 +32,10 @@ public class UIController {
         return mav("pricing.html");
     }
 
-    private static ModelAndView mav(String page){
+    private ModelAndView mav(String page){
         ModelAndView mav = new ModelAndView(page);
         mav.addObject("info",new InfoData());
+        mav.addObject("baseUrl",baseUrl);
         return mav;
     }
 

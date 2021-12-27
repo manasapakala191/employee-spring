@@ -1,11 +1,18 @@
+function getUrl(){
+    var baseUrl = $("meta[name=baseUrl]").attr("content")
+    return baseUrl + "/api/employee";
+}
+
 function addEmployee(event){
 
     var $form = $("#employee-create-form");
     var json = toJson($form);
 
+
     console.log(json);
+    var url = getUrl();
     $.ajax({
-       url: '../api',
+       url: url,
        type: 'POST',
        contentType: "application/json; charset=utf-8",
        data: json,
@@ -28,8 +35,9 @@ function updateEmployee(event){
     var $form = $("#employee-update-form");
     var json = toJson($form);
 
+    var url = getUrl();
     $.ajax({
-        url: '../api',
+        url: url,
         type: 'PUT',
         data: json,
         success: function(response){
@@ -45,10 +53,9 @@ function updateEmployee(event){
 }
 
 function deleteEmployee(id){
+    var url = getUrl();
     $.ajax({
-        url: '../api?'+$.param({
-            "id": id
-        }),
+        url: url+ '/'+id,
         type: 'DELETE',
         success: function(data){
             console.log("Employee deleted");
@@ -61,9 +68,10 @@ function deleteEmployee(id){
 }
 
 function getEmployeeList(){
-
+    var url = getUrl();
+    console.log(url);
     $.ajax({
-        url: '../api',
+        url: url,
         type: 'GET',
         success: function(response){
             console.log("Employee data fetched");
@@ -91,9 +99,9 @@ $(document).ready(getEmployeeList);
 function displayEmployeeList(data){
     var $tbody = $('#employee-table').find('tbody');
     $tbody.empty();
-    var obj = JSON.parse(data)
-    for(var i in obj){
-        var e = obj[i];
+//    var obj = JSON.parse(data);
+    for(var i in data){
+        var e = data[i];
         console.log(e);
         var buttonHtml = '<button onclick="deleteEmployee('+e.id +')">delete</button>';
         var hrefHtml = '<a href="update.html">Update employee</a>';
